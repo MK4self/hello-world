@@ -1,0 +1,2013 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2008 sp1 (http://www.altova.com) by Suleman Chaudhry (RBC) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:rbcTypes="RBC/Types" targetNamespace="RBC/Types" elementFormDefault="unqualified" attributeFormDefault="unqualified" version="2.7.1">
+	<!-- ================================================================= 
+Trade File Definition
+    
+Updated from v2.0.5 to v2.0.6 by John Stote 10/Aug/2006 to incorporate CFD element types
+================================================================= -->
+	<!--=================================================================
+Updated to v2.0.7 - portfolioCode and depositTaker maxLength changed from 6 to 16
+====================================================================-->
+	<!--===================================================================
+Updated to v2.1.0 - added IRS and CDS
+====================================================================-->
+	<!--===================================================================
+Updated to v2.2.0 - added repo
+====================================================================-->
+	<!--===================================================================
+Updated to v2.4.0 - added secFundAllocation and allocationChild regions
+====================================================================-->
+	<!--===================================================================
+Updated to v2.5.0 - added batchRef and recordCount to Sec and flagDeliverable and fixingDate to FX
+====================================================================-->
+<!--===================================================================
+Updated to v2.5.1 - added FUND value to instrumenttype
+====================================================================-->
+<!--===================================================================
+Updated to v2.6.0 - added Four new Instrument Types- CDSOption,IRSwap,CCS,RateOption
+====================================================================-->
+<!--===================================================================
+Updated to v2.7.0 - added secChild, secChildCxl and secAllocationChildCxl
+====================================================================-->
+<!--===================================================================
+Updated to v2.7.1 - added setCurr for NDF 
+====================================================================-->
+
+	<xs:element name="tradeFile" type="rbcTypes:tradefileType" nillable="false"/>
+	<xs:complexType name="tradefileType">
+		<xs:annotation>
+			<xs:documentation>Trade File: contains all trades. Must contain at
+                least one</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0" maxOccurs="unbounded">
+			<xs:choice>
+				<xs:element name="rateOption" type="rbcTypes:rateOption"/>
+				<xs:element name="ccs" type="rbcTypes:ccs"/>	
+				<xs:element name="irswap" type="rbcTypes:irswap"/>
+				<xs:element name="cdsOption" type="rbcTypes:cdsOption"/>
+				<xs:element name="sec" type="rbcTypes:sec"/>
+				<xs:element name="ftd" type="rbcTypes:ftd"/>
+				<xs:element name="fx" type="rbcTypes:fx"/>
+				<xs:element name="irs" type="rbcTypes:irs"/>
+				<xs:element name="cds" type="rbcTypes:cds"/>
+				<xs:element name="repo" type="rbcTypes:repo"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="fileName" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:maxLength value="40"/>
+					<xs:whiteSpace value="preserve"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="dateStamp" type="rbcTypes:date" use="required"/>
+		<xs:attribute name="timeStamp" type="rbcTypes:time" use="required"/>
+		<xs:attribute name="sequenceNumber" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:nonNegativeInteger">
+					<xs:maxInclusive value="99999"/>
+					<xs:minInclusive value="00000"/>
+					<xs:totalDigits value="5"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="tradeCount" type="xs:int" use="required"/>
+	</xs:complexType>
+	<!-- ================================================================= -->
+	<!--                      Product Type Definitions                     -->
+	<!-- ================================================================= -->
+	<xs:complexType name="fx">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Foreign Exchange Product
+                Types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="fxAllocation" type="rbcTypes:fxAllocation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="fxAllocationCxl" type="rbcTypes:fxAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ftd">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Fixed Term Deposit (Money
+                Market) Product Types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ftdAllocation" type="rbcTypes:ftdAllocation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="ftdAllocationCxl" type="rbcTypes:ftdAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="sec">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Security Product
+                Types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="secBlock" type="rbcTypes:secBlock" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="secBlockCxl" type="rbcTypes:secBlock" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="secFundAllocation" type="rbcTypes:secFundAllocation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="secFundAllocationCxl" type="rbcTypes:secFundAllocation" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:choice>
+				<xs:element name="secAllocation" type="rbcTypes:secAllocation" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="secChild" type="rbcTypes:secChild" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:choice>			
+			<xs:choice>
+				<xs:element name="secAllocationCxl" type="rbcTypes:secAllocation" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="secChildCxl" type="rbcTypes:secChild" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:choice>			
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="irs">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Interest Rate Swap Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="irsAllocation" type="rbcTypes:irsAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="cds">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Credit Default Swap Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="cdsAllocation" type="rbcTypes:cdsAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="repo">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Repo Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="repoAllocation" type="rbcTypes:repoAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- ================================================================= -->
+	<!--                      New instrument Product Type Definitions                  -->
+	<!-- ================================================================= -->
+	<xs:complexType name="cdsOption">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Credit Default Swap option Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="cdsOptionAllocation" type="rbcTypes:cdsOptionAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="irswap">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Interest Rate Swap Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="irswapsAllocation" type="rbcTypes:irswapsAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+		<xs:complexType name="rateOption">
+		<xs:annotation>
+			<xs:documentation>Class definition for all Rates option Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="rateOptionAllocation" type="rbcTypes:rateOptionAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ccs">
+		<xs:annotation>
+			<xs:documentation>Class definition for all cross currency Swap Product types</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ccsAllocation" type="rbcTypes:ccsAllocation" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<!-- ================================================================= -->
+	<!--                      Allocation Type Definitions                  -->
+	<!-- ================================================================= -->
+	<xs:complexType name="allocation">
+		<xs:annotation>
+			<xs:documentation>Generic allocation, inherited by all concrete
+                allocation types (FX, FTD etc)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="source">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="brokerCode" type="rbcTypes:brokerCode"/>
+			<xs:element name="tradeDate" type="rbcTypes:date"/>
+			<xs:element name="tradeTime" type="rbcTypes:time"/>
+			<xs:element name="portfolioCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="6"/>
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="fxAllocation">
+		<xs:annotation>
+			<xs:documentation>FX allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="rbcTypes:allocation">
+				<xs:sequence>
+					<xs:element name="tradeRef">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+								<xs:maxLength value="13"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="opType" type="rbcTypes:operationType"/>
+					<xs:element name="settDate" type="rbcTypes:date"/>
+					<xs:element name="purchCurr" type="rbcTypes:currency"/>
+					<xs:element name="purchAmt" type="rbcTypes:tradeAmount"/>
+					<xs:element name="sellCurr" type="rbcTypes:currency"/>
+					<xs:element name="sellAmt" type="rbcTypes:tradeAmount"/>
+					<xs:element name="rate" type="rbcTypes:tradeRate"/>
+					<xs:element name="flagSpotForward" type="rbcTypes:fxRateType"/>
+					<xs:element name="flagOpenClose" type="rbcTypes:openCloseIndicator" minOccurs="0"/>
+					<xs:element name="flagOrigTradeRef" type="rbcTypes:tradeRef" minOccurs="0"/>
+					<xs:element name="flagShareClassCode" type="rbcTypes:shareClassCode" minOccurs="0" />
+					<xs:element name="flagDeliverable" type="rbcTypes:yesNo" minOccurs="0" />
+					<xs:element name="fixingDate" type="rbcTypes:date" minOccurs="0" />
+					<xs:element name="settCurr" type="rbcTypes:currency" minOccurs="0" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ftdAllocation">
+		<xs:annotation>
+			<xs:documentation>FTD (MM) allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="rbcTypes:allocation">
+				<xs:sequence>
+					<xs:element name="tradeRef">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:minLength value="1"/>
+								<xs:maxLength value="13"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="depositTaker" type="rbcTypes:depositTaker"/>
+					<xs:element name="instType" type="rbcTypes:instrumentType"/>
+					<xs:element name="noticePeriod" type="rbcTypes:noticePeriod" minOccurs="0"/>
+					<xs:element name="balanceAmount" type="rbcTypes:balanceAmount" minOccurs="0"/>
+					<xs:element name="opType" type="rbcTypes:operationType"/>
+					<xs:element name="tranType" type="rbcTypes:ftdTransactionType"/>
+					<xs:element name="startDate" type="rbcTypes:date"/>
+					<xs:element name="maturityDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="tradeCurr" type="rbcTypes:currency"/>
+					<xs:element name="rate" type="rbcTypes:tradeRate"/>
+					<xs:element name="dayCount" type="rbcTypes:dayCountFraction" minOccurs="0"/>
+					<xs:element name="prinAmount" type="rbcTypes:tradeAmount"/>
+					<xs:element name="intAmount" type="rbcTypes:tradeAmount"/>
+					<xs:element name="settAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="flagRollover" type="rbcTypes:rolloverFlag" minOccurs="0"/>
+					<xs:element name="origTradeRate" type="rbcTypes:tradeRate" minOccurs="0"/>
+					<xs:element name="origTradeRef" type="rbcTypes:tradeRef" minOccurs="0"/>
+					<xs:element name="origPrinAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="origMatDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="origIntAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="secBlock">
+		<xs:annotation>
+			<xs:documentation>Base type for Securitised Trade allocations and
+                blocks</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="source">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="blockRef">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="brokerCode" type="rbcTypes:brokerCode"/>
+			<xs:element name="clearingBrokerCode" type="rbcTypes:brokerCode" minOccurs="0"/>
+			<xs:element name="cancellationInd" type="rbcTypes:cancellationIndicator"/>
+			<xs:element name="tranType" type="rbcTypes:secTransactionType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date"/>
+			<xs:element name="tradeTime" type="rbcTypes:time"/>
+			<xs:element name="settDate" type="rbcTypes:date"/>
+			<xs:element name="rbcSecCode" type="rbcTypes:rbcSecCode" minOccurs="0"/>
+			<xs:element name="sedolCode" type="rbcTypes:sedol" minOccurs="0"/>
+			<xs:element name="isinCode" type="rbcTypes:isin" minOccurs="0"/>
+			<xs:element name="secDesc" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="instType">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="4"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="marketCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ctryCode" type="rbcTypes:country"/>
+			<xs:element name="secCurr" type="rbcTypes:currency"/>
+			<xs:element name="matDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="couponRate" type="rbcTypes:tradeRate" minOccurs="0"/>
+			<xs:element name="issuer" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="nextPayDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="numDaysAccrued" type="xs:int" minOccurs="0"/>
+			<xs:element name="optionType" type="rbcTypes:optionType" minOccurs="0"/>
+			<xs:element name="contractSize" type="rbcTypes:contractSize" minOccurs="0"/>
+			<xs:element name="expDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="qty" type="rbcTypes:quantity"/>
+			<xs:element name="tradePrice" type="rbcTypes:price"/>
+			<xs:element name="prcFactor" type="rbcTypes:price"/>
+			<xs:element name="tradeCurr" type="rbcTypes:currency"/>
+			<xs:element name="grossAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="intAmt" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="locFees" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="locTax" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="othFees" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="brokComm" type="rbcTypes:tradeAmount"/>
+			<xs:element name="netAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="settCurr" type="rbcTypes:currency"/>
+			<xs:element name="netSettAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="exchRate" type="rbcTypes:tradeRate" minOccurs="0"/>
+			<xs:element name="flagExCumDiv" type="rbcTypes:exCumDividend" minOccurs="0"/>
+			<xs:element name="flagExCumInt" type="rbcTypes:exCumInterest" minOccurs="0"/>
+			<xs:element name="flagRights" type="rbcTypes:shareRightsEntitlement" minOccurs="0"/>
+			<xs:element name="flagOpenClose" type="rbcTypes:openCloseIndicator" minOccurs="0"/>
+			<xs:element name="flagShortLong" type="rbcTypes:longShortIndicator" minOccurs="0"/>
+			<xs:element name="bargCond" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="flagFreeAgainstPay" type="rbcTypes:freeAgainstPayment" minOccurs="0"/>
+			<xs:element name="stratCode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="flagAgencyPrin" type="rbcTypes:agencyPrincipleIndicator" minOccurs="0"/>
+			<xs:element name="flagProgTrade" type="rbcTypes:programTradeIndicator"/>
+			<xs:element name="flagIncCap" type="rbcTypes:incomeCapitalIndicator" minOccurs="0"/>
+			<xs:element name="flagSoftHard" type="rbcTypes:softHardIndicator" minOccurs="0"/>
+			<xs:element name="flagCleanDirty" type="rbcTypes:cleanDirtyIndicator" minOccurs="0"/>
+			<xs:element name="flagPlacement" type="rbcTypes:paymentIndicator" minOccurs="0"/>
+			<xs:element name="exchangeCode" type="rbcTypes:exchangeCode" minOccurs="0"/>
+			<!-- Now adding the CFD fields needed for v2.0.6 -->
+			<xs:element name="rateType" type="rbcTypes:rateType" minOccurs="0"/>
+			<xs:element name="spread" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="rateMatDate" type="rbcTypes:rateMatDate" minOccurs="0"/>
+			<xs:element name="delayDays" type="rbcTypes:delayDays" minOccurs="0"/>
+			<xs:element name="payDateBasis" type="rbcTypes:payDateBasis" minOccurs="0"/>
+			<xs:element name="coEfficient" type="rbcTypes:coEfficient" minOccurs="0"/>
+			<xs:element name="resetDate" type="rbcTypes:resetDate" minOccurs="0"/>
+			<xs:element name="childCounter" type="rbcTypes:childCounter" minOccurs="0"/>
+			<!-- ended adding the V2.0.6 fields -->
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="secChild">
+		<xs:annotation>
+			<xs:documentation>Child trades that would be matched with the sceBlock 
+				through blockRef element</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="source">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="blockRef">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="brokerCode" type="rbcTypes:brokerCode"/>
+			<xs:element name="cancellationInd" type="rbcTypes:cancellationIndicator"/>
+			<xs:element name="tranType" type="rbcTypes:secTransactionType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date"/>
+			<xs:element name="tradeTime" type="rbcTypes:time"/>
+			<xs:element name="settDate" type="rbcTypes:date"/>
+			<xs:element name="rbcSecCode" type="rbcTypes:rbcSecCode" minOccurs="0"/>
+			<xs:element name="sedolCode" type="rbcTypes:sedol" minOccurs="0"/>
+			<xs:element name="isinCode" type="rbcTypes:isin" minOccurs="0"/>
+			<xs:element name="secDesc" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>			
+			<xs:element name="instType" type="rbcTypes:secInsType"/>
+			<xs:element name="marketCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="ctryCode" type="rbcTypes:country"/>
+			<xs:element name="secCurr" type="rbcTypes:currency"/>
+			<xs:element name="matDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="couponRate" type="rbcTypes:tradeRate" minOccurs="0"/>
+			<xs:element name="issuer" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="nextPayDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="numDaysAccrued" type="xs:int" minOccurs="0"/>
+			<xs:element name="qty" type="rbcTypes:quantity"/>
+			<xs:element name="tradePrice" type="rbcTypes:price"/>
+			<xs:element name="prcFactor" type="rbcTypes:price"/>
+			<xs:element name="tradeCurr" type="rbcTypes:currency"/>
+			<xs:element name="grossAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="intAmt" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="locFees" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="locTax" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="othFees" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="brokComm" type="rbcTypes:tradeAmount"/>
+			<xs:element name="netAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="settCurr" type="rbcTypes:currency"/>
+			<xs:element name="netSettAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="exchRate" type="rbcTypes:tradeRate" minOccurs="0"/>
+			<xs:element name="flagExCumDiv" type="rbcTypes:exCumDividend" minOccurs="0"/>
+			<xs:element name="flagExCumInt" type="rbcTypes:exCumInterest" minOccurs="0"/>
+			<xs:element name="flagRights" type="rbcTypes:shareRightsEntitlement" minOccurs="0"/>
+			<xs:element name="bargCond" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="20"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="flagFreeAgainstPay" type="rbcTypes:freeAgainstPayment" minOccurs="0"/>
+			<xs:element name="stratCode" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="6"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="flagAgencyPrin" type="rbcTypes:agencyPrincipleIndicator" minOccurs="0"/>
+			<xs:element name="flagProgTrade" type="rbcTypes:programTradeIndicator"/>
+			<xs:element name="flagIncCap" type="rbcTypes:incomeCapitalIndicator" minOccurs="0"/>
+			<xs:element name="flagSoftHard" type="rbcTypes:softHardIndicator" minOccurs="0"/>
+			<xs:element name="flagCleanDirty" type="rbcTypes:cleanDirtyIndicator" minOccurs="0"/>
+			<xs:element name="flagPlacement" type="rbcTypes:paymentIndicator" minOccurs="0"/>
+			<xs:element name="exchangeCode" type="rbcTypes:exchangeCode" minOccurs="0"/>
+			<xs:element name="portfolioCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:minLength value="6"/>
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="blockFlag" type="rbcTypes:yesNo"/>
+			<xs:element name="childReference" type="rbcTypes:tradeRef" />
+			<xs:element name="childSequence" type="rbcTypes:sequence" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="secAllocation">
+		<xs:annotation>
+			<xs:documentation>Securitised Trade allocation
+                detail</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="rbcTypes:secBlock">
+				<xs:sequence>
+					<xs:element name="allocationRef">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="13"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="portfolioCode">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:maxLength value="16"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:element>
+					<xs:element name="blockFlag" type="rbcTypes:yesNo"/>
+					<xs:element name="batchRef" type="rbcTypes:timestamp" minOccurs="0" />
+					<xs:element name="recordCount" type="rbcTypes:recordCount" minOccurs="0" />
+					<xs:element name="childCounter" type="rbcTypes:childCounter" minOccurs="0"/>
+					<xs:element name="secAllocationChild" type="rbcTypes:secAllocationChild" minOccurs="0" maxOccurs="unbounded" />
+					<xs:element name="secAllocationChildCxl" type="rbcTypes:secAllocationChild" minOccurs="0" maxOccurs="unbounded" />
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="irsAllocation">
+		<xs:annotation>
+			<xs:documentation>IRS allocation detail</xs:documentation>
+		</xs:annotation>
+			<xs:sequence>
+				<xs:element name="portfolioCode">
+					<xs:simpleType>
+						<xs:restriction base="xs:string">
+						<xs:minLength value="6"/>
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+					</xs:simpleType>
+				</xs:element>
+					<xs:element name="multiManager" type="rbcTypes:multimanager" minOccurs="0"/>
+					<xs:element name="ourRef" type="rbcTypes:reference"/>
+					<xs:element name="ref" type="rbcTypes:longReference" minOccurs="0"/>
+					<xs:element name="eventType" type="rbcTypes:opType"/>
+					<xs:element name="dealType" type="rbcTypes:dealType"/>
+					<xs:element name="fundPayLegP" type="rbcTypes:yesNo"/>
+					<xs:element name="iMM" type="rbcTypes:yesNo" minOccurs="0"/>
+					<xs:element name="tradeDate" type="rbcTypes:date"/>
+					<xs:element name="effectiveDate" type="rbcTypes:date"/>
+					<xs:element name="maturityDate" type="rbcTypes:date"/>
+					<xs:element name="busiDayConvMaturity" type="rbcTypes:busiDayConvention"/>
+					<xs:element name="feesCur" type="rbcTypes:currency"/>
+					<xs:element name="feesAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="feesPaymentDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="feesPayer" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="curNotionalP" type="rbcTypes:currency"/>
+					<xs:element name="notionalP" type="rbcTypes:tradeAmount"/>
+					<xs:element name="payerLegP" type="rbcTypes:counterparty"/>
+					<xs:element name="floatRateOptP" type="rbcTypes:floatRateOpt" minOccurs="0"/>
+					<xs:element name="floatRateFirstPeriodP" type="rbcTypes:floatRateFirstPeriod" minOccurs="0"/>
+					<xs:element name="spreadP" type="rbcTypes:spread" minOccurs="0"/>
+					<xs:element name="linearInterpolationP" type="rbcTypes:yesNo" minOccurs="0"/>
+					<xs:element name="rateP" type="rbcTypes:tradeRate" minOccurs="0"/>
+					<xs:element name="designedMatP" type="rbcTypes:paymentFrequency"/>
+					<xs:element name="periodEndP" type="rbcTypes:yesNo"/>
+					<xs:element name="dayCountP" type="rbcTypes:dayCntFraction"/>
+					<xs:element name="busiDayConvP" type="rbcTypes:busiDayConvention"/>
+					<xs:element name="financialCentreP" type="rbcTypes:financialCentre"/>
+					<xs:element name="rollDayP" type="rbcTypes:rollDay"  minOccurs="0"/>
+					<xs:element name="firstPaymentDateP" type="rbcTypes:date"/>
+					<xs:element name="lastPaymentDateP" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="previousPaymentDateP" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="curInitialExchAmP" type="rbcTypes:currency" minOccurs="0"/>
+					<xs:element name="initialExchAmP" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="initialExchAmPayerP" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="curFinalExchAmP" type="rbcTypes:currency" minOccurs="0"/>
+					<xs:element name="finalExchAmP" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="finalExchAmPayerP" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="curNotionalR" type="rbcTypes:currency"/>
+					<xs:element name="notionalR" type="rbcTypes:tradeAmount"/>
+					<xs:element name="payerLegR" type="rbcTypes:counterparty"/>
+					<xs:element name="floatRateOptR" type="rbcTypes:floatRateOpt" minOccurs="0"/>
+					<xs:element name="floatRateFirstPeriodR" type="rbcTypes:floatRateFirstPeriod" minOccurs="0"/>
+					<xs:element name="spreadR" type="rbcTypes:spread" minOccurs="0"/>
+					<xs:element name="linearInterpolationR" type="rbcTypes:yesNo" minOccurs="0"/>
+					<xs:element name="rateR" type="rbcTypes:tradeRate" minOccurs="0"/>
+					<xs:element name="designedMatR" type="rbcTypes:paymentFrequency"/>
+					<xs:element name="periodEndR" type="rbcTypes:yesNo"/>
+					<xs:element name="dayCountR" type="rbcTypes:dayCntFraction"/>
+					<xs:element name="busiDayConvR" type="rbcTypes:busiDayConvention"/>
+					<xs:element name="financialCentreR" type="rbcTypes:financialCentre"/>
+					<xs:element name="rollDayR" type="rbcTypes:rollDay"  minOccurs="0"/>
+					<xs:element name="firstPaymentDateR" type="rbcTypes:date"/>
+					<xs:element name="lastPaymentDateR" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="previousPaymentDateR" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="curInitialExchAmR" type="rbcTypes:currency" minOccurs="0"/>
+					<xs:element name="initialExchAmR" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="initialExchAmPayerR" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="curFinalExchAmR" type="rbcTypes:currency" minOccurs="0"/>
+					<xs:element name="finalExchAmR" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="finalExchAmPayerR" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="paymentDateInitialExch" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="paymentDateFinalExch" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="breakFirstDate" type="rbcTypes:breakInterval" minOccurs="0"/>
+					<xs:element name="breakFrequency" type="rbcTypes:breakFrequency" minOccurs="0"/>
+					<xs:element name="breakOverrideFirstDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="breakCalculationMethod" type="rbcTypes:breakCalculationMethod" minOccurs="0"/>
+					<xs:element name="novationTermTradeDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="novationTermEffectiveDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="remainingParty" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="transferor" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="transferee" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="termAmountP" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="termAmountR" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="termFeesAmountPayer" type="rbcTypes:counterparty" minOccurs="0"/>
+					<xs:element name="curTermFeesAmount" type="rbcTypes:currency" minOccurs="0"/>
+					<xs:element name="termFeesAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+					<xs:element name="novationTermFeesPayDate" type="rbcTypes:date" minOccurs="0"/>
+					<xs:element name="comments" type="rbcTypes:comment" minOccurs="0"/>
+				</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="cdsAllocation">
+		<xs:annotation>
+			<xs:documentation>CDS allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="portfolio" type="rbcTypes:portfolio"/>
+			<xs:element name="multiManager" type="rbcTypes:multimanager" minOccurs="0"/>
+			<xs:element name="ourRef" type="rbcTypes:reference"/>
+			<xs:element name="ref" type="rbcTypes:longReference"  minOccurs="0"/>
+			<xs:element name="eventType" type="rbcTypes:eventType"/>
+			<xs:element name="dealType" type="rbcTypes:dealType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date" />
+			<xs:element name="effectiveDate" type="rbcTypes:date" />
+			<xs:element name="scheduledTermDate" type="rbcTypes:date" />
+			<xs:element name="firstPaymentDate" type="rbcTypes:date" />
+			<xs:element name="referenceObligation" type="rbcTypes:referenceObligation" />
+			<xs:element name="referenceEntityName" type="rbcTypes:referenceEntityName" minOccurs="0"/>
+			<xs:element name="fixedRatePayer" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="floatRatePayer" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="fixedRate" type="rbcTypes:fixedRate" minOccurs="0"/>
+			<xs:element name="dayCountFraction" type="rbcTypes:dayCntFraction" minOccurs="0"/>
+			<xs:element name="floatRateAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="floatRateCurrency" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="paymentFrequency" type="rbcTypes:paymentFrequency" />
+			<xs:element name="calcAgent" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="calcAgentCity" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="financialCentre" type="rbcTypes:financialCentre" minOccurs="0"/>
+			<xs:element name="businessDayConvention" type="rbcTypes:busiDayConvention" minOccurs="0"/>
+			<xs:element name="initialPaymentAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="initialPaymentCurrency" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="initialPaymentDate" type="rbcTypes:date"  minOccurs="0"/>
+			<xs:element name="initialPaymentAmountPayer" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="initialPaymentAmountReceiver" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="postTradeTransactionDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="postTradeEffectiveDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="affectedNotionalAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="affectedNotionalCurrency" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="outstandingNotionalAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="outstandingNotionalCurrency" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="postTradePaymentAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="postTradePaymentCurrency" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="postTradePaymentDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="postTradePaymentPayer" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="postTradePaymentReceiver" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="fullFirstCalculationPeriodApplicable" type="rbcTypes:yesNo" minOccurs="0"/>
+			<xs:element name="transferee" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="transferor" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="remainingParty" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="newTradeReferenceNumber" type="rbcTypes:reference" minOccurs="0"/>
+			<xs:element name="newIndependentAmountPaymentPercent" type="rbcTypes:paymentPercent" minOccurs="0"/>
+			<xs:element name="newIndependentAmountPayer" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="newIndependentAmountReceiver" type="rbcTypes:counterparty" minOccurs="0"/>
+			<xs:element name="newReferenceObligation" type="rbcTypes:referenceObligation" minOccurs="0"/>
+			<xs:element name="newReferenceEntityID" type="rbcTypes:referenceEntityId" minOccurs="0"/>
+			<xs:element name="firstPaymentPeriodAccrualStartDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="newFirstPaymentPeriodAccrualStartDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="comments" type="rbcTypes:comment" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="repoAllocation">
+		<xs:annotation>
+			<xs:documentation>REPO allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="blockRef">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="13"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="cancellationInd" type="rbcTypes:yesNo"/>
+			<xs:element name="controlNumberReference" type="rbcTypes:repoReference"/>
+			<xs:element name="linkedReference" type="rbcTypes:repoReference" minOccurs="0" />
+			<xs:element name="sendersReference" type="rbcTypes:repoReference" minOccurs="0" />
+			<xs:element name="repoMessageFunction" type="rbcTypes:repoFunction" />
+			<xs:element name="repoTypeIndicator" type="rbcTypes:repoType" />
+			<xs:element name="tradeRef" type="rbcTypes:tradeRef" />
+			<xs:element name="tradeDate" type="rbcTypes:date" />
+			<xs:element name="tradeTime" type="rbcTypes:time" />
+			<xs:element name="placeOfTrade" type="rbcTypes:counterparty" />
+			<xs:element name="placeOfSettlement" type="rbcTypes:settlementPlace" />
+			<xs:element name="fundID" type="rbcTypes:portfolio" />
+			<xs:element name="counterpartyBIC" type="rbcTypes:counterparty" />
+			<xs:element name="openLegDealPrice" type="rbcTypes:dealPrice" />
+			<xs:element name="forwardLegDealPrice" type="rbcTypes:dealPrice" />
+			<xs:element name="brokerCommission" type="rbcTypes:tradeAmount" />
+			<xs:element name="commissionAccrualMethod" type="rbcTypes:accrualMethod" />
+			<xs:element name="flagProgTrade" type="rbcTypes:programFlag" />
+			<xs:element name="repoRate" type="rbcTypes:repoRate" minOccurs="0" />
+			<xs:element name="tradeRegulatoryConditions" type="rbcTypes:condition" minOccurs="0" />
+			<xs:element name="tradeTransactionConditions" type="rbcTypes:condition" minOccurs="0" />
+			<xs:element name="priceFactor" type="rbcTypes:priceFactor" />
+			<xs:element name="referenceRate" type="rbcTypes:repoRate" minOccurs="0" />
+			<xs:element name="dayDelay" type="rbcTypes:dayDelay" minOccurs="0" />
+			<xs:element name="placeOfTradeType" type="rbcTypes:placeOfTradeType" />
+			<xs:element name="settlementParties" type="rbcTypes:counterparty" />
+			<xs:element name="quantityOfFinancialInstrument" type="rbcTypes:tradeAmount" />
+			<xs:element name="nominalAmount" type="rbcTypes:tradeAmount" />
+			<xs:element name="underlyingFinancialInstrumentType" type="rbcTypes:repoInstrumentType" />
+			<xs:element name="underlyingFinancialInstrumentName" type="rbcTypes:instrumentName" />
+			<xs:element name="rbcSecCode" type="rbcTypes:rbcSecCode" minOccurs="0" />
+			<xs:element name="sedolCode" type="rbcTypes:sedol" minOccurs="0" />
+			<xs:element name="isinCode" type="rbcTypes:isin" minOccurs="0" />
+			<xs:element name="marketCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="countryCode" type="rbcTypes:country"/>
+			<xs:element name="maturityDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="couponRate" type="rbcTypes:tradeRate" minOccurs="0"/>
+			<xs:element name="issuer" minOccurs="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="35"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="nextPayDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="securityCurrency" type="rbcTypes:currency"/>
+			<xs:element name="methodOfInterestComputation" type="rbcTypes:dayCntFraction" />
+			<xs:element name="interestAmount" type="rbcTypes:tradeAmount" minOccurs="0" />
+			<xs:element name="denominationCurrency" type="rbcTypes:currency" />
+			<xs:element name="numDaysAccrued" type="rbcTypes:daysAccrued" minOccurs="0" />
+			<xs:element name="openSettCurrency" type="rbcTypes:currency" />
+			<xs:element name="openNetSettAmount" type="rbcTypes:tradeAmount" />
+			<xs:element name="openGrossSettAmount" type="rbcTypes:tradeAmount" />
+			<xs:element name="openSettDate" type="rbcTypes:date" />
+			<xs:element name="openInterestAmount" type="rbcTypes:tradeAmount" minOccurs="0" />
+			<xs:element name="openNumDaysAccrued" type="rbcTypes:daysAccrued" />
+			<xs:element name="closeSettCurrency" type="rbcTypes:currency" />
+			<xs:element name="closeNetSettAmount" type="rbcTypes:tradeAmount" />
+			<xs:element name="closeGrossSettAmount" type="rbcTypes:tradeAmount" />
+			<xs:element name="closeSettDate" type="rbcTypes:date" />
+			<xs:element name="closeInterestAmount" type="rbcTypes:tradeAmount" minOccurs="0" />
+			<xs:element name="closeNumDaysAccrued" type="rbcTypes:daysAccrued" />
+			<xs:element name="comments" type="rbcTypes:comment" minOccurs="0" />
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="secFundAllocation">
+		<xs:annotation>
+			<xs:documentation>Type for Securitised Fund Trade allocations </xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="allocationRef">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="10"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="cancellationInd" type="rbcTypes:cancellationIndicator"/>
+			<xs:element name="portfolioCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="qty" type="rbcTypes:quantity"/>
+			<xs:element name="tradePrice" type="rbcTypes:price"/>
+			<xs:element name="tradeCurr" type="rbcTypes:currency"/>
+			<xs:element name="settCurr" type="rbcTypes:currency"/>
+			<xs:element name="netSettAmt" type="rbcTypes:tradeAmount"/>
+			<xs:element name="isinCode" type="rbcTypes:isin" />
+			<xs:element name="secDesc" >
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="40"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="instType" type="rbcTypes:instrumentType" minOccurs="0" />
+			<xs:element name="tranType" type="rbcTypes:secTransactionType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date" />
+			<xs:element name="tradeTime" type="rbcTypes:time"/>
+			<xs:element name="settDate" type="rbcTypes:date" />
+			<xs:element name="source">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="16"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="rbcSecCode" type="rbcTypes:rbcSecCode" minOccurs="0"/>
+			<xs:element name="marketCode">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:maxLength value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:element>
+			<xs:element name="forShares" type="rbcTypes:forShares" />
+			<xs:element name="navDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="dealAdvice" type="rbcTypes:comment" minOccurs="0"/>
+			<xs:element name="childCounter" type="rbcTypes:childCounter" minOccurs="0"/>
+			<xs:element name="secAllocationChild" type="rbcTypes:secAllocationChild" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="secAllocationChildCxl" type="rbcTypes:secAllocationChild" minOccurs="0" maxOccurs="unbounded"/>			
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="secAllocationChild">
+		<xs:sequence>
+			<xs:element name="childReference" type="rbcTypes:tradeRef" />
+			<xs:element name="childSequence" type="rbcTypes:sequence" />
+			<xs:element name="qty" type="rbcTypes:quantity" />
+			<xs:element name="portfolioCode" type="rbcTypes:portfolio" />
+		</xs:sequence>
+	</xs:complexType>
+			<!-- ================================================================= -->
+	<!--                     Start of New instrument Allocations                 -->
+	<!-- ================================================================= -->
+	
+	<xs:complexType name="cdsOptionAllocation">
+		<xs:annotation>
+			<xs:documentation>CDS option allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="portfolio" type="rbcTypes:portfolio"/>
+			<xs:element name="multiManager" type="rbcTypes:multimanager" minOccurs="0"/>
+			<xs:element name="ourRef" type="rbcTypes:reference"/>
+			<xs:element name="ref" type="rbcTypes:longReference"  minOccurs="0"/>
+			<xs:element name="eventType" type="rbcTypes:cdsEventType"/>
+			<xs:element name="dealType" type="rbcTypes:cdsDealType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date" />
+			<xs:element name="swaptionBuyer" type="rbcTypes:swaptionBuyer" />
+			<xs:element name="swaptionSeller" type="rbcTypes:swaptionSeller" />
+			<xs:element name="premiumCurrency" type="rbcTypes:currency"  minOccurs="0" />
+			<xs:element name="premiumPaymentAmount" type="rbcTypes:tradeAmount"  minOccurs="0" />
+			<xs:element name="premiumPaymentDate" type="rbcTypes:date"  minOccurs="0" />
+			<xs:element name="strike" type="rbcTypes:strike" />
+			<xs:element name="expDate" type="rbcTypes:date" />
+			<xs:element name="optionType" type="rbcTypes:newOptionType" />
+			<xs:element name="referenceObligation" type="rbcTypes:referenceObligation"  />
+			<xs:element name="referenceEntityName" type="rbcTypes:referenceEntityName" minOccurs="0"/>
+			<xs:element name="underlyingSwapTerminationDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="notionalCCY" type="rbcTypes:currency" minOccurs="0" />
+			<xs:element name="notional" type="rbcTypes:tradeAmount" minOccurs="0" />
+			<xs:element name="spread" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="dayCountFraction" type="rbcTypes:cdsDayCountFraction" minOccurs="0"/>
+			<xs:element name="businessDayConvention" type="rbcTypes:businessDayConventn" minOccurs="0"/>
+			<xs:element name="paymentFrequency" type="rbcTypes:newPaymentFrequency" />
+			<xs:element name="comments" type="rbcTypes:comment" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="rateOptionAllocation">
+		<xs:annotation>
+			<xs:documentation>RATE option allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="portfolio" type="rbcTypes:portfolio"/>
+			<xs:element name="multiManager" type="rbcTypes:multimanager" minOccurs="0"/>
+			<xs:element name="ourRef" type="rbcTypes:reference"/>
+			<xs:element name="ref" type="rbcTypes:longReference"  minOccurs="0"/>
+			<xs:element name="eventType" type="rbcTypes:newEventType"/>
+			<xs:element name="dealType" type="rbcTypes:rateDealType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date" />
+			<xs:element name="swaptionBuyer" type="rbcTypes:swaptionBuyer" />
+			<xs:element name="swaptionSeller" type="rbcTypes:swaptionSeller" />
+			<xs:element name="premiumCurrency" type="rbcTypes:currency"  minOccurs="0" />
+			<xs:element name="premiumPaymentAmount" type="rbcTypes:tradeAmount"  minOccurs="0" />
+			<xs:element name="premiumPaymentDate" type="rbcTypes:date"  minOccurs="0" />
+			<xs:element name="strike" type="rbcTypes:strike" />
+			<xs:element name="expDate" type="rbcTypes:date" />
+			<xs:element name="optionType" type="rbcTypes:newOptionType" />
+			<xs:element name="underlyingSwapTerminationDate" type="rbcTypes:date" />
+			<xs:element name="effectiveDate" type="rbcTypes:date" />
+			<xs:element name="notionalCCY" type="rbcTypes:currency" />
+			<xs:element name="notional" type="rbcTypes:tradeAmount" />
+			<xs:element name="refRate" type="rbcTypes:refRate" />
+			<xs:element name="initialPaymentDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="businessDayConvention" type="rbcTypes:rateBusiDayConvention" />
+			<xs:element name="floatPaymentFrequency" type="rbcTypes:newPaymentFrequency" />
+			<xs:element name="floatDayCountFraction" type="rbcTypes:dayCntFraction" />
+			<xs:element name="fixedPaymentFrequency" type="rbcTypes:newPaymentFrequency" />
+			<xs:element name="fixedDayCountFraction" type="rbcTypes:dayCntFraction" />
+			<xs:element name="spread" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="financialCentreP" type="rbcTypes:country" minOccurs="0" />
+			<xs:element name="comment" type="rbcTypes:comment" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="ccsAllocation">
+		<xs:annotation>
+			<xs:documentation>CCS allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="portfolio" type="rbcTypes:portfolio"/>
+			<xs:element name="multiManager" type="rbcTypes:multimanager" minOccurs="0"/>
+			<xs:element name="ourRef" type="rbcTypes:reference"/>
+			<xs:element name="ref" type="rbcTypes:longReference"  minOccurs="0"/>
+			<xs:element name="eventType" type="rbcTypes:newEventType"/>
+			<xs:element name="dealType" type="rbcTypes:ccsDealType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="effectiveDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="maturityDate" type="rbcTypes:date" />
+			<xs:element name="businessDayConvention" type="rbcTypes:newBusiDayConvention" minOccurs="0" />
+			<xs:element name="currnotionalP" type="rbcTypes:currency" />
+			<xs:element name="notionalP" type="rbcTypes:tradeAmount" />
+			<xs:element name="payerLegP" type="rbcTypes:newCounterparty" minOccurs="0"/>
+			<xs:element name="floatReferenceRateP" type="rbcTypes:floatReferenceRate" minOccurs="0"/>
+			<xs:element name="floatRateFirstPeriodP" type="rbcTypes:floatRateFirstperiod" minOccurs="0"/>
+			<xs:element name="spreadP" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="rateP" type="rbcTypes:newTradeRate" minOccurs="0"/>
+			<xs:element name="paymentFrequencyP" type="rbcTypes:newPaymentFrequency" minOccurs="0" />
+			<xs:element name="dayCountP" type="rbcTypes:newDayCntFraction" minOccurs="0" />
+			<xs:element name="financialCentreP" type="rbcTypes:country" minOccurs="0" />
+			<xs:element name="firstPaymentDateP" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="currnotionalR" type="rbcTypes:currency" />
+			<xs:element name="notionalR" type="rbcTypes:tradeAmount" />
+			<xs:element name="payerLegR" type="rbcTypes:newCounterparty"/>
+			<xs:element name="floatReferenceRateR" type="rbcTypes:floatReferenceRate" minOccurs="0"/>
+			<xs:element name="floatRateFirstPeriodR" type="rbcTypes:floatRateFirstperiod" minOccurs="0"/>
+			<xs:element name="spreadR" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="rateR" type="rbcTypes:newTradeRate" minOccurs="0"/>
+			<xs:element name="paymentFrequencyR" type="rbcTypes:newPaymentFrequency" minOccurs="0" />
+			<xs:element name="dayCountR" type="rbcTypes:newDayCntFraction" minOccurs="0"/>
+			<xs:element name="financialCentreR" type="rbcTypes:country" minOccurs="0" />
+			<xs:element name="firstPaymentDateR" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="affectedNotionalAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="outstandingNotionalAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="termTradeDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="termFeePayer" type="rbcTypes:newCounterparty" minOccurs="0"/>
+			<xs:element name="termFeeReceiver" type="rbcTypes:newCounterparty" minOccurs="0"/>
+			<xs:element name="currTermFee" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="termFeePayDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="termFeeAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="termEffectiveDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="comments" type="rbcTypes:comment" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<xs:complexType name="irswapsAllocation">
+		<xs:annotation>
+			<xs:documentation>IRSWAP allocation detail</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="portfolio" type="rbcTypes:portfolio"/>
+			<xs:element name="multiManager" type="rbcTypes:multimanager" minOccurs="0"/>
+			<xs:element name="ourRef" type="rbcTypes:reference"/>
+			<xs:element name="ref" type="rbcTypes:longReference"  minOccurs="0"/>
+			<xs:element name="eventType" type="rbcTypes:newEventType"/>
+			<xs:element name="dealType" type="rbcTypes:irsDealType"/>
+			<xs:element name="tradeDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="effectiveDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="maturityDate" type="rbcTypes:date" />
+			<xs:element name="businessDayConvention" type="rbcTypes:newBusiDayConvention" minOccurs="0" />
+			<xs:element name="currnotionalP" type="rbcTypes:currency" />
+			<xs:element name="notionalP" type="rbcTypes:tradeAmount" />
+			<xs:element name="payerLegP" type="rbcTypes:newCounterparty" minOccurs="0" />
+			<xs:element name="floatReferenceRateP" type="rbcTypes:floatReferenceRate" minOccurs="0" />
+			<xs:element name="floatRateFirstPeriodP" type="rbcTypes:floatRateFirstperiod" minOccurs="0" />
+			<xs:element name="spreadP" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="rateP" type="rbcTypes:newTradeRate" minOccurs="0"/>
+			<xs:element name="paymentFrequencyP" type="rbcTypes:newPaymentFrequency" minOccurs="0" />
+			<xs:element name="dayCountP" type="rbcTypes:newDayCntFraction" minOccurs="0" />
+			<xs:element name="financialCentreP" type="rbcTypes:country" minOccurs="0" />
+			<xs:element name="firstPaymentDateP" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="currnotionalR" type="rbcTypes:currency" />
+			<xs:element name="notionalR" type="rbcTypes:tradeAmount" />
+			<xs:element name="payerLegR" type="rbcTypes:newCounterparty"/>
+			<xs:element name="floatReferenceRateR" type="rbcTypes:floatReferenceRate" minOccurs="0"/>
+			<xs:element name="floatRateFirstPeriodR" type="rbcTypes:floatRateFirstperiod" minOccurs="0"/>
+			<xs:element name="spreadR" type="rbcTypes:spread" minOccurs="0"/>
+			<xs:element name="rateR" type="rbcTypes:newTradeRate" minOccurs="0"/>
+			<xs:element name="paymentFrequencyR" type="rbcTypes:newPaymentFrequency" minOccurs="0" />
+			<xs:element name="dayCountR" type="rbcTypes:newDayCntFraction" minOccurs="0"/>
+			<xs:element name="financialCentreR" type="rbcTypes:country" minOccurs="0" />
+			<xs:element name="firstPaymentDateR" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="termFeeReceiver" type="rbcTypes:newCounterparty" minOccurs="0"/>
+			<xs:element name="affectedNotionalAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="outstandingNotionalAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="termTradeDate" type="rbcTypes:date" minOccurs="0"/>
+			<xs:element name="termFeePayer" type="rbcTypes:newCounterparty" minOccurs="0"/>
+			<xs:element name="currTermFee" type="rbcTypes:currency" minOccurs="0"/>
+			<xs:element name="termFeePayDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="termFeeAmount" type="rbcTypes:tradeAmount" minOccurs="0"/>
+			<xs:element name="termEffectiveDate" type="rbcTypes:date" minOccurs="0" />
+			<xs:element name="comments" type="rbcTypes:comment" minOccurs="0"/>
+
+		</xs:sequence>
+	</xs:complexType>
+	
+	
+	<!-- ================================================================= -->
+	<!--                     End of New instrument Allocations                 -->
+	<!-- ================================================================= -->
+	
+	
+	
+	<!-- ================================================================= -->
+	<!--                     Data Type definitions                         -->
+	<!-- ================================================================= -->
+	<xs:simpleType name="date">
+		<xs:annotation>
+			<xs:documentation>Represents a date in the format
+                YYYYMMDD</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="8"/>
+			<xs:minLength value="8"/>
+			<xs:pattern value="((19|20|21)\d\d)(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])"/>
+			<!-- exactly 8 characters -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="time">
+		<xs:annotation>
+			<xs:documentation>Represents a time in the format
+                HHMMSS</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="6"/>
+			<xs:minLength value="6"/>
+			<xs:pattern value="(0[0-9]|1[0-9]|2[0-3])([0-5][0-9])([0-5][0-9])"/>
+			<!-- exactly 8 characters -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="operationType">
+		<xs:annotation>
+			<xs:documentation>Operation type - 'N' = New Transactions, 'C' =
+                Cancellation</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[CN]"/>
+			<!-- according to the spreadsheet 'spec' -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="brokerCode">
+		<xs:annotation>
+			<xs:documentation>Representation of a broker code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+			<xs:minLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="depositTaker">
+		<xs:annotation>
+			<xs:documentation>Representation of a deposit taker</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+			<xs:minLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="instrumentType">
+		<xs:annotation>
+			<xs:documentation>Fixed term load/deposit or call deposit</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="LDP"/>
+			<xs:enumeration value="CALL"/>
+			<xs:enumeration value="FUND"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="noticePeriod">
+		<xs:annotation>
+			<xs:documentation>Number of days notice period</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+			<xs:fractionDigits value="0"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="balanceAmount">
+		<xs:annotation>
+			<xs:documentation>Balance call deposit amount following transaction</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="17"/>
+			<xs:fractionDigits value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="exchangeCode">
+		<xs:annotation>
+			<xs:documentation>Representation of a broker code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="4"/>
+			<xs:minLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tradeRate">
+		<xs:annotation>
+			<xs:documentation>fx rate type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="20"/>
+			<xs:fractionDigits value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="quantity">
+		<xs:annotation>
+			<xs:documentation>Quantity type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="20"/>
+			<xs:fractionDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="price">
+		<xs:annotation>
+			<xs:documentation>Price type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="20"/>
+			<xs:fractionDigits value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="contractSize">
+		<xs:annotation>
+			<xs:documentation>Contract size type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="17"/>
+			<xs:fractionDigits value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fxRateType">
+		<xs:annotation>
+			<xs:documentation>Spot or Forward: ASET = Spot, AFWD =
+                Forward</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ASET"/>
+			<xs:enumeration value="AFWD"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="openCloseIndicator">
+		<xs:annotation>
+			<xs:documentation>Open close flag type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[OC]"/>
+			<!-- single character only -->
+			<!-- allow only a C or an O -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ftdTransactionType">
+		<xs:annotation>
+			<xs:documentation>L = Loan, B = Deposit</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="L"/>
+			<xs:enumeration value="B"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="secTransactionType">
+		<xs:annotation>
+			<xs:documentation>ABU = Buy, ASE = Sell</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ABU"/>
+			<xs:enumeration value="ASE"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tradeAmount">
+		<xs:annotation>
+			<xs:documentation>Default type for all trade
+                amounts</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="17"/>
+			<xs:fractionDigits value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="currency">
+		<xs:annotation>
+			<xs:documentation>ISO Currency code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dayCountFraction">
+		<xs:annotation>
+			<xs:documentation>TODO: RBC need to confirm</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rolloverFlag">
+		<xs:annotation>
+			<xs:documentation>F = Full Rollover, P = Partial Rollover, N = No
+                associated trade for rollover</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[FPN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="tradeRef">
+		<xs:annotation>
+			<xs:documentation>A trade reference</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="13"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="cancellationIndicator">
+		<xs:annotation>
+			<xs:documentation>Y = cancellation indicator, N = new block
+                record</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+			<xs:minLength value="1"/>
+			<xs:pattern value="[YN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rbcSecCode">
+		<xs:annotation>
+			<xs:documentation>If RBC security Code not provided then
+                SEDOL/Instrument Type/Market Code/Security Description/Security
+                Currency/Issuer must be present</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sedol">
+		<xs:annotation>
+			<xs:documentation>Stock Exchange Daily Official List
+                code</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="isin">
+		<xs:annotation>
+			<xs:documentation>International Securities Identification
+                Number</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="11"/>
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="country">
+		<xs:annotation>
+			<xs:documentation>3-letter ISO Country codes</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="optionType">
+		<xs:annotation>
+			<xs:documentation>CAL=call, PUT=put</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:enumeration value="CAL"/>
+			<xs:enumeration value="PUT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="exCumDividend">
+		<xs:annotation>
+			<xs:documentation>Y=Ex dividend, C=cum dividend</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[XC]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="yesNo">
+		<xs:annotation>
+			<xs:documentation>Y=yes, N=no</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[YN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="exCumInterest">
+		<xs:annotation>
+			<xs:documentation>Y=Ex interest, N=cum interest</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[YN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="shareRightsEntitlement">
+		<xs:annotation>
+			<xs:documentation>C=Cum rights, X=ex rights</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[CX]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="freeAgainstPayment">
+		<xs:annotation>
+			<xs:documentation>F=Free, A=Against</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[FA]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="longShortIndicator">
+		<xs:annotation>
+			<xs:documentation>L=Long, S=Short</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[LS]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="agencyPrincipleIndicator">
+		<xs:annotation>
+			<xs:documentation>A=agent (for market), P=principle (for own book),
+                X=cross (client to client cross)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[APX]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="programTradeIndicator">
+		<xs:annotation>
+			<xs:documentation>Y=program trade, else N</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[YN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="incomeCapitalIndicator">
+		<xs:annotation>
+			<xs:documentation>TODO: unknown values</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="softHardIndicator">
+		<xs:annotation>
+			<xs:documentation>S=Soft, H=Hard</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[SH]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="cleanDirtyIndicator">
+		<xs:annotation>
+			<xs:documentation>Y=Dirty, N=Clean</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[YN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="paymentIndicator">
+		<xs:annotation>
+			<xs:documentation/>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- v2.0.6 changes - new types for CFD's start here -->
+	<xs:simpleType name="rateType">
+		<xs:annotation>
+			<xs:documentation>Interest rate type: LIBOR, EURIBOR etc</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rateMatDate">
+		<xs:annotation>
+			<xs:documentation>Rate Maturity Date (interest rate basis i.e. Overnight, 1 week, 1 month)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="resetDate">
+		<xs:annotation>
+			<xs:documentation>Payment day, Next payment (cash reset) date</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="8"/>
+			<xs:maxLength value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="spread">
+		<xs:annotation>
+			<xs:documentation>Spread</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="coEfficient">
+		<xs:annotation>
+			<xs:documentation>Corporate Action Coefficient, Percentage of the underlying
+            security's entitlement that the fund is entitled to (or to pay) on the CFD</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="delayDays">
+		<xs:annotation>
+			<xs:documentation>Number f days that relates to the Calculation 
+                payment date method (number of tays previous or following)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="payDateBasis">
+		<xs:annotation>
+			<xs:documentation>This field specifies the treatment of the 
+                payment if it falls on a non-working day</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- end of additions to the types for the V2.0.6 CFD additions -->
+	<!--v2.1.0 changes - new types for irs-->
+	<xs:simpleType name="multimanager">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="reference">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="longReference">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="opType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="T"/>
+			<xs:enumeration value="PT"/>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="PA"/>
+			<xs:enumeration value="C"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dealType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="busiDayConvention">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FOLLOWING"/>
+			<xs:enumeration value="MODIFIED FOLLOWING"/>
+			<xs:enumeration value="PRECEDING"/>
+			<xs:enumeration value="MODIFIED PRECEDING"/>
+			<xs:enumeration value="NO ADJUSTMENT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="newBusiDayConvention">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FOL"/>
+			<xs:enumeration value="MDF"/>
+			<xs:enumeration value="PRE"/>
+			<xs:enumeration value="MPR"/>
+			<xs:enumeration value="NAP"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rateBusiDayConvention">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FOL"/>
+			<xs:enumeration value="MF"/>
+			<xs:enumeration value="PR"/>
+			<xs:enumeration value="MPR"/>
+			<xs:enumeration value="CAL"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="counterparty">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+			<xs:minLength value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="floatRateOpt">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="paymentFrequency">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1M"/>
+			<xs:enumeration value="3M"/>
+			<xs:enumeration value="6M"/>
+			<xs:enumeration value="1Y"/>
+			<xs:enumeration value="ZC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dayCntFraction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="30/360"/>
+			<xs:enumeration value="30E/360"/>
+			<xs:enumeration value="ACT/360"/>
+			<xs:enumeration value="ACT/365"/>
+			<xs:enumeration value="ACT/ACT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="financialCentre">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="rollDay">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="breakInterval">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1d"/>
+			<xs:enumeration value="1y"/>
+			<xs:enumeration value="2y"/>
+			<xs:enumeration value="3y"/>
+			<xs:enumeration value="4y"/>
+			<xs:enumeration value="5y"/>
+			<xs:enumeration value="6y"/>
+			<xs:enumeration value="7y"/>
+			<xs:enumeration value="8y"/>
+			<xs:enumeration value="9y"/>
+			<xs:enumeration value="10y"/>
+			<xs:enumeration value="12y"/>
+			<xs:enumeration value="15y"/>
+			<xs:enumeration value="20y"/>
+			<xs:enumeration value="25y"/>
+			<xs:enumeration value="30y"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="breakFrequency">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1d"/>
+			<xs:enumeration value="6m"/>
+			<xs:enumeration value="1y"/>
+			<xs:enumeration value="2y"/>
+			<xs:enumeration value="3y"/>
+			<xs:enumeration value="4y"/>
+			<xs:enumeration value="5y"/>
+			<xs:enumeration value="6y"/>
+			<xs:enumeration value="7y"/>
+			<xs:enumeration value="8y"/>
+			<xs:enumeration value="9y"/>
+			<xs:enumeration value="10y"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="breakCalculationMethod">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Adjusted"/>
+			<xs:enumeration value="Unadjusted"/>
+			<xs:enumeration value="Standard"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="floatRateFirstPeriod">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!--end of changes for irs-->
+	<!-- changes for cds -->
+	<xs:simpleType name="comment">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="255"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="portfolio">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="eventType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="T"/>
+			<xs:enumeration value="PT"/>
+			<xs:enumeration value="I"/>
+			<xs:enumeration value="A"/>
+			<xs:enumeration value="PA"/>
+			<xs:enumeration value="C"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="referenceObligation">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="referenceEntityName">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="250"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="fixedRate">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="7"/>
+			<xs:fractionDigits value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="paymentPercent">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="7"/>
+			<xs:fractionDigits value="5"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="referenceEntityId">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="6"/>
+			<xs:maxLength value="9"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- end of changes for cds -->
+	<!-- start of changes for repo -->
+	<xs:simpleType name="repoReference">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="12"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="repoFunction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NEWM"/>
+			<xs:enumeration value="CANC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="repoType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="REPO"/>
+			<xs:enumeration value="REVERSEREPO"/>
+			<xs:enumeration value="SELLBUYBACK"/>
+			<xs:enumeration value="BUYSELLBACK"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="settlementPlace">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="11"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dealPrice">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="16"/>
+			<xs:fractionDigits value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="programFlag">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="repoRate">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="16"/>
+			<xs:fractionDigits value="8"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="condition">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="16"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="priceFactor">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="20"/>
+			<xs:fractionDigits value="10"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="repoInstrumentType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="instrumentName">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="40"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="daysAccrued">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="3"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="accrualMethod">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="1"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="dayDelay">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="placeOfTradeType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="4"/>
+			<xs:maxLength value="4"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- end of changes for repo -->
+	<!-- changes for phoenix -->
+	<xs:simpleType name="shareClassCode">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3" />
+			<xs:maxLength value="4" />
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="childCounter">
+		<xs:annotation>
+			<xs:documentation>Number of child allocation records</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="forShares">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1"/>
+			<xs:pattern value="[YN]"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sequence">
+		<xs:restriction base="xs:nonNegativeInteger">
+			<xs:maxInclusive value="99"/>
+			<xs:minInclusive value="01"/>
+			<xs:totalDigits value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- end of changes for phoenix -->
+	<xs:simpleType name="timestamp">
+		<xs:annotation>
+			<xs:documentation>Represents a timestamp in the format YYYYMMDDHHMMSS</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="14"/>
+			<xs:minLength value="14"/>
+			<xs:pattern value="((19|20|21)\d\d)(0[1-9]|1[012])(0[1-9]|1[0-9]|2[0-9]|3[01])(0[0-9]|1[0-9]|2[0-3])([0-5][0-9])([0-5][0-9])"/>
+			<!-- exactly 14 characters -->
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="recordCount">
+		<xs:annotation>
+			<xs:documentation>Number of allocation records</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:integer">
+			<xs:totalDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+		<!-- Start of additions to the types for the V2.6.0 CDSOptions additions -->
+		
+	<xs:simpleType name="cdsEventType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="T"/>
+			<xs:enumeration value="C"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="cdsDealType">
+		<xs:annotation>
+			<xs:documentation>CDSOPAY=CDS Option Pay, CDSOREC=CDS OPTION Rec</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="14"/>
+			<xs:enumeration value="CDSOPAY"/>
+			<xs:enumeration value="CDSOREC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="swaptionBuyer">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="swaptionSeller">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="20"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="strike">
+		<xs:annotation>
+			<xs:documentation>Strike</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="newOptionType">
+		<xs:annotation>
+			<xs:documentation>EUR = European, AME = American, BER = Bermudan</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:enumeration value="EUR"/>
+			<xs:enumeration value="AME"/>
+			<xs:enumeration value="BER"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="cdsDayCountFraction">
+		<xs:annotation>
+			<xs:documentation>TODO: RBC need to confirm</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ACT/360"/>
+			<xs:enumeration value="ACT/365"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="businessDayConventn">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="FOLLOWING"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="newPaymentFrequency">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1M"/>
+			<xs:enumeration value="3M"/>
+			<xs:enumeration value="6M"/>
+			<xs:enumeration value="1Y"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- End of additions to the types for the V2.6.0 CDSOptions additions -->
+	<!-- Start of additions to the types for the V2.6.0 RATE Options additions -->
+	<xs:simpleType name="newEventType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="N"/>
+			<xs:enumeration value="FT"/>
+			<xs:enumeration value="C"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="rateDealType">
+		<xs:annotation>
+			<xs:documentation>RATEOPAY=RATE Option Pay, RATEOREC=RATE OPTION Rec</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="RATEOPAY"/>
+			<xs:enumeration value="RATEOREC"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="refRate">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- End of additions to the types for the V2.6.0 RATE Options additions -->	
+	<!-- Start of additions to the types for the V2.6.0 CCS  additions -->
+	<xs:simpleType name="ccsDealType">
+		<xs:annotation>
+			<xs:documentation>CCS = Cross Currency SWAP</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:enumeration value="CCS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="newCounterparty">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="floatReferenceRate">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="50"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="newTradeRate">
+		<xs:annotation>
+			<xs:documentation>fx rate type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="newDayCntFraction">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="30/360"/>
+			<xs:enumeration value="ACT/360"/>
+			<xs:enumeration value="ACT/365"/>
+			<xs:enumeration value="ACT/ACT"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- End of additions to the types for the V2.6.0 CCS  additions -->
+		<!-- Start of additions to the types for the V2.6.0 IRSwap  additions -->
+	<xs:simpleType name="irsDealType">
+		<xs:annotation>
+			<xs:documentation>IRS = Interest Rate SWAPS</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="3"/>
+			<xs:enumeration value="IRS"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="floatRateFirstperiod">
+		<xs:restriction base="xs:decimal">
+			<xs:totalDigits value="12"/>
+			<xs:fractionDigits value="6"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="secInsType">
+		<xs:annotation>
+			<xs:documentation>Instrument types for secChild and secChildCxl</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="CS"/>
+			<xs:enumeration value="CORP"/>
+			<xs:enumeration value="GOVT"/>
+			<xs:enumeration value="CD"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<!-- End of additions to the types for the V2.6.0 IRSwap  additions -->
+
+</xs:schema>
